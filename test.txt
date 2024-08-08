@@ -1,2 +1,3 @@
 ls -l
 wc test.txt
+ to practice the git

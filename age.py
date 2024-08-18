@@ -5,4 +5,4 @@ if $age >= 18:
     print ('e')
 else:
     print ('no')
-fi
+

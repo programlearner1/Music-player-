@@ -4,8 +4,8 @@ const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
-
+//const io = new Server(server);
+const io = socketIo(server);
 let rooms = {}; // Store the current song and timestamp for each room
 
 io.on('connection', (socket) => {
@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 });
 
 // Serve static files from the current directory
-//app.use(express.static(__dirname));
+app.use(express.static(__dirname));
 
 // Serve the Socket.IO client library
 app.get('/socket.io/socket.io.js', (req, res) => {

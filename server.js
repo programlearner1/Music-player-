@@ -63,3 +63,6 @@ app.use((req, res) => {
 server.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
+app.get('/socket.io/socket.io.js', (req, res) => {
+  res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
+});

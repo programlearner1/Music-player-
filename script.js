@@ -62,9 +62,12 @@ socket.on('next-song', () => {
   audioPlayer.play();
 });
 const roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room ID
-app.get('*', (req, res) => {
+/*app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 app.get('/api/some-endpoint', (req, res) => {
   res.send('Hello World');
+});*/
+app.use((req, res, next) => {
+  res.status(404).send('Sorry, that resource was not found.');
 });

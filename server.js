@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 });
 
 // Serve static files from the current directory
-app.use(express.static(__dirname));
+//app.use(express.static(__dirname));
 
 // Serve the Socket.IO client library
 app.get('/socket.io/socket.io.js', (req, res) => {

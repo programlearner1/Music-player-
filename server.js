@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
 
   socket.on('join-room', ({ roomId }) => {
     socket.join(roomId);
-    console.log(`User joined room: ${roomId}`);
+    console.log(`User  joined room: ${roomId}`);
 
     // Sync new user with current room state
     if (rooms[roomId]) {
@@ -26,6 +26,7 @@ io.on('connection', (socket) => {
     rooms[roomId] = { song, timestamp };
     io.in(roomId).emit('play-song', { song, timestamp });
   });
+
   socket.on('pause-song', ({ roomId }) => {
     io.in(roomId).emit('pause-song');
   });
@@ -38,13 +39,27 @@ io.on('connection', (socket) => {
     console.log('A user disconnected');
     // Optionally, check if the room is empty and remove it
     for (let roomId in rooms) {
-        if (io.sockets.adapter.rooms[roomId] && io.sockets.adapter.rooms[roomId].length === 0) {
-            delete rooms[roomId];
-        }
+      if (io.sockets.adapter.rooms[roomId] && io.sockets.adapter.rooms[roomId].length === 0) {
+        delete rooms[roomId];
+      }
     }
+  });
 });
+
+// Serve static files from the current directory
+app.use(express.static(__dirname));
+
+// Serve the Socket.IO client library
+app.get('/socket.io/socket.io.js', (req, res) => {
+  res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
 });
+
+// 404 handler for unknown routes
+app.use((req, res) => {
+  res.status(404).send('Resource not found');
+});
+
+// Start the server
 server.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
-  app.use(express.static(__dirname)); // Serve all files in the project folder
-})
+});

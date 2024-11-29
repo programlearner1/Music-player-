@@ -1,34 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Synchronized Music Player</title>
-  <link rel="stylesheet" href="styles.css">
-  <!--<script defer src="script.js" src="/socket.io/socket.io.js"></script>-->
-  <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.IO -->
-  <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Music Room</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Connect to the Socket.IO server
+
+        // Function to join a room
+        function joinRoom() {
+            const roomId = document.getElementById('roomId').value;
+            socket.emit('join-room', { roomId });
+        }
+
+        // Listen for 'play-song' event from the server
+        socket.on('play-song', ({ song, timestamp }) => {
+            console.log(`Now playing: ${song} at ${timestamp} seconds`);
+            // Here you can add logic to play the song in your music player
+        });
+
+        // Listen for 'user-joined' event from the server
+        socket.on('user-joined', ({ message }) => {
+            console.log(message);
+        });
+
+        // Function to play a song
+        function playSong() {
+            const roomId = document.getElementById('roomId').value;
+            const song = document.getElementById('song').value;
+            const timestamp = 0; // You can set a specific timestamp if needed
+            socket.emit('play-song', { roomId, song, timestamp });
+        }
+
+        // Function to pause the song
+        function pauseSong() {
+            const roomId = document.getElementById('roomId').value;
+            socket.emit('pause-song', { roomId });
+        }
+
+        // Function to skip to the next song
+        function nextSong() {
+            const roomId = document.getElementById('roomId').value;
+            socket.emit('next-song', { roomId });
+        }
+    </script>
 </head>
 <body>
-  <link rel="icon" href="public\favicon.ico" type="image/x-icon">
-  <div class="container">
-    <h1>Synchronized Music Player</h1>
-    <div id="player">
-      <audio id="audio-player" controls>
-        <source src="music.mp3" type="audio/mpeg">
-        <source src="song2.mp3" type="audio/mpeg">
-        
-      </audio>
-      <div class="buttons">
-        <button id="play-btn">Play</button>
-        <button id="pause-btn">Pause</button>
-        <button id="next-btn">Next Song</button>
-      </div>
-    </div>
-    <div id="room">
-      <input type="text" id="room-id" placeholder="Enter Room ID">
-      <button id="join-room-btn">Join Room</button>
-    </div>
-  </div>
+    <h1>Welcome to the Music Room</h1>
+    <input type="text" id="roomId" placeholder="Enter Room ID" />
+    <button onclick="joinRoom()">Join Room</button>
+
+    <h2>Play a Song</h2>
+    <input type="text" id="song" placeholder="Enter Song Name" />
+    <button onclick="playSong()">Play Song</button>
+    <button onclick="pauseSong()">Pause Song</button>
+    <button onclick="nextSong()">Next Song</button>
 </body>
 </html>

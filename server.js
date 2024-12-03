@@ -5,7 +5,13 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "https://imaginative-malabi-f9a327.netlify.app", // Your Netlify URL
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 //const io = socketIo(server);
 let rooms = {}; // Store the current song and timestamp for each room
 

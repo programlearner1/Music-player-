@@ -1,6 +1,5 @@
 // script.js
-//const socket = io('http://localhost:3000'); // Connect to the server
-const socket = io('http://https://imaginative-malabi-f9a327.netlify.app:3000'); // Connect to the server
+const socket = io('http://localhost:3000'); // Connect to the server
 const audioPlayer = document.getElementById('audio-player');
 const playBtn = document.getElementById('play-btn');
 const pauseBtn = document.getElementById('pause-btn');
@@ -63,12 +62,3 @@ socket.on('next-song', () => {
   audioPlayer.play();
 });
 const roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room IDconst roomId = 'room-' + Math.random().toString(36).substr(2, 9); // Generates a random room ID
-/*app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-app.get('/api/some-endpoint', (req, res) => {
-  res.send('Hello World');
-});*/
-/*app.use((req, res, next) => {
-  res.status(404).send('Sorry, that resource was not found.');
-});*/

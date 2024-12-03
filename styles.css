@@ -7,19 +7,19 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #7a7878;
 }
 
 .container {
   text-align: center;
-  background: #fff;
+  background: #d38888;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  color: #333;
+  color: #2c0808;
   margin-bottom: 20px;
 }
 

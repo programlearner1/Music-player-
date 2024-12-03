@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -66,3 +67,7 @@ server.listen(3000, () => {
 app.get('/socket.io/socket.io.js', (req, res) => {
     res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
 });
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve the favicon
+app.get('/favicon.ico', (req, res) => res.status(204));

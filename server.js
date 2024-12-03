@@ -12,7 +12,7 @@ const io = new Server(server, {
     credentials: true
   }
 });
-//const io = socketIo(server);
+
 let rooms = {}; // Store the current song and timestamp for each room
 
 io.on('connection', (socket) => {
@@ -70,9 +70,8 @@ app.use((req, res) => {
 server.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
-app.get('/socket.io/socket.io.js', (req, res) => {
-    res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
-});
+
+// Serve static files from 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the favicon

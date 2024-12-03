@@ -14,22 +14,27 @@
 </head>
 <body>
   <div class="container">
-    <h1>Music Player</h1>
+    <header>
+      <h1>Synchronized Music Player</h1>
+    </header>
     <div id="player">
       <img id="song-image" src="" alt="Song Image" />
+      <div class="song-info">
+        <h2 id="song-title">Song Title</h2>
+        <h3 id="song-artist">Artist Name</h3>
+      </div>
       <audio id="audio-player" controls>
         <source id="audio-source" src="" type="audio/mpeg">
         Your browser does not support the audio element.
-    </audio>
-    
-      <div class="buttons">
-        <button id="play-btn">Play</button>
-        <button id="pause-btn">Pause</button>
-        <button id="next-btn">Next Song</button>
+      </audio>
+      <div class="controls">
+        <button id="play-btn" class="control-btn">Play</button>
+        <button id="pause-btn" class="control-btn">Pause</button>
+        <button id="next-btn" class="control-btn">Next</button>
       </div>
     </div>
     <div id="room">
-      <input type="text" id="room-id" placeholder="Enter Room ID">
+      <input type="text" id="room-id" placeholder="Enter Room ID" />
       <button id="join-room-btn">Join Room</button>
     </div>
   </div>

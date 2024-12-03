@@ -15,6 +15,13 @@ const io = new Server(server, {
 
 let rooms = {}; // Store the current song and timestamp for each room
 
+// Example default song
+const defaultSong = {
+  title: "Default Song Title",
+  url: "https://example.com/default-song.mp3", // URL of the default song
+  timestamp: 0 // Start from the beginning
+};
+
 io.on('connection', (socket) => {
   console.log('A user connected');
 
@@ -22,32 +29,48 @@ io.on('connection', (socket) => {
     socket.join(roomId);
     console.log(`User  joined room: ${roomId}`);
 
-    // Sync new user with current room state
-    if (rooms[roomId]) {
-      socket.emit('play-song', rooms[roomId]);
+    // If the room does not exist, initialize it with the default song
+    if (!rooms[roomId]) {
+      rooms[roomId] = {
+        song: { ...defaultSong },
+        owner: socket.id, // Set the first user as the owner
+        users: [socket.id] // Keep track of users in the room
+      };
+    } else {
+      rooms[roomId].users.push(socket.id); // Add user to the existing room
     }
+
+    // Sync new user with current room state
+    socket.emit('play-song', rooms[roomId].song);
     socket.to(roomId).emit('user-joined', { message: 'A new user has joined the room.' });
   });
 
   socket.on('play-song', ({ roomId, song, timestamp }) => {
-    rooms[roomId] = { song, timestamp };
-    io.in(roomId).emit('play-song', { song, timestamp });
+    if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner
+      rooms[roomId].song = { song, timestamp }; // Update the song
+      io.in(roomId).emit('play-song', { song, timestamp });
+    }
   });
 
   socket.on('pause-song', ({ roomId }) => {
-    io.in(roomId).emit('pause-song');
+    if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner
+      io.in(roomId).emit('pause-song');
+    }
   });
 
   socket.on('next-song', ({ roomId }) => {
-    io.in(roomId).emit('next-song');
+    if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner
+      io.in(roomId).emit('next-song');
+    }
   });
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
     // Optionally, check if the room is empty and remove it
     for (let roomId in rooms) {
-      if (io.sockets.adapter.rooms[roomId] && io.sockets.adapter.rooms[roomId].length === 0) {
-        delete rooms[roomId];
+      rooms[roomId].users = rooms[roomId].users.filter(userId => userId !== socket.id); // Remove user from the room
+      if (rooms[roomId].users.length === 0) {
+        delete rooms[roomId]; // Delete the room if empty
       }
     }
   });

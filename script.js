@@ -1,5 +1,6 @@
 // script.js
-const socket = io('http://localhost:3000'); // Connect to the server
+//const socket = io('http://localhost:3000'); // Connect to the server
+const socket = io('http://https://imaginative-malabi-f9a327.netlify.app:3000'); // Connect to the server
 const audioPlayer = document.getElementById('audio-player');
 const playBtn = document.getElementById('play-btn');
 const pauseBtn = document.getElementById('pause-btn');

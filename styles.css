@@ -65,3 +65,9 @@ audio {
 #room button:hover {
   background-color: #1e7e34;
 }
+#song-image{
+  height: 300px;
+  width: 300px;
+  border-radius: 10em;
+
+}

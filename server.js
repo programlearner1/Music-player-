@@ -66,11 +66,14 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('next-song', ({ roomId }) => {
-    if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner
-      io.in(roomId).emit('next-song');
+  socket.on('next-song', ({ roomId }) =>{
+    if (rooms[roomId] && rooms[roomId].owner === socket.id) {
+        // Update the current song index to the next song
+        rooms[roomId].currentSongIndex += 1; // Example logic to go to the next song
+        const currentSongIndex = rooms[roomId].currentSongIndex; // Get the updated index
+        io.in(roomId).emit('play-song', { songIndex: currentSongIndex }); // Emit the updated index
     }
-  });
+});
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');

@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Listen for synchronization events from the server
     socket.on('play-song', (data) =>  {
+        console.log('Received data for play:', data);
         if (data && typeof data.songIndex !== 'undefined') {
             if (data.songIndex >= 0 && data.songIndex < songs.length) {
                 currentSongIndex = data.songIndex; // Update the current song index

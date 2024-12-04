@@ -47,8 +47,9 @@ io.on('connection', (socket) => {
 
   socket.on('play-song', ({ roomId, song, timestamp }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner
-      rooms[roomId].song = { song, timestamp }; // Update the song
-      io.in(roomId).emit('play-song', { song, timestamp });
+      rooms[roomId].song = { song, timestamp }; 
+      const currentSongIndex = rooms[roomId].currentSongIndex;// Update the song
+      io.in(roomId).emit('play-song', { songIndex: currentSongIndex });
     }
   });
   socket.on('play-song', (data) => {

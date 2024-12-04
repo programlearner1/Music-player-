@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: "Rayani kadhale", artist:" M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },
         { title: "Manasilaayo", artist:"Anirudh Ravichander", url: "song5.mp3", image: "1.jpg" },
     ];
+    console.log('Songs array:', songs);
 
     let currentSongIndex = 0;
     changeSong(currentSongIndex);
@@ -58,19 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.emit('next-song', { roomId: currentRoom, songIndex: currentSongIndex });
         }
         changeSong(currentSongIndex);
+        audioPlayer.play(); 
     });
 
     // Function to change the song
     function changeSong(index) {
+        console.log('Attempting to change song to index:', index);
+        console.log('Current songs array:', songs);
+    
         if (index < 0 || index >= songs.length) {
             console.error('Invalid song index:', index);
             return; // Exit the function if the index is invalid
         }
+    
+        // Now safely access the image and other properties
         songImage.src = songs[index].image; // Update the song image
         audioSource.src = songs[index].url; // Update the audio source
         body.style.backgroundImage = `url(${songs[index].image})`; // Change the body background
         audioPlayer.load(); // Load the new song
-        audioPlayer.play(); // Play the new song
+        //audioPlayer.play(); // Play the new song
         document.getElementById('song-title').innerText = songs[index].title; // Update the song title
         document.getElementById('song-artist').innerText = songs[index].artist || 'Unknown Artist'; 
     }

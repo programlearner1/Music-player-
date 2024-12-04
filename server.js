@@ -53,11 +53,13 @@ io.on('connection', (socket) => {
     }
   });
   socket.on('play-song', (data) => {
+    const { roomId, songIndex } = data;//added
     // Assuming you have logic to determine the current song index
     if (rooms[data.roomId]) {
         const currentSongIndex = rooms[data.roomId].currentSongIndex; // Example logic to get the index
         io.to(data.roomId).emit('play-song', { songIndex: currentSongIndex });
     }
+    io.to(roomId).emit('play-song', { songIndex });//added
 });
 
   socket.on('pause-song', ({ roomId }) => {

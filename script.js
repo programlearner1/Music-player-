@@ -62,6 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to change the song
     function changeSong(index) {
+        if (index < 0 || index >= songs.length) {
+            console.error('Invalid song index:', index);
+            return; // Exit the function if the index is invalid
+        }
         songImage.src = songs[index].image; // Update the song image
         audioSource.src = songs[index].url; // Update the audio source
         body.style.backgroundImage = `url(${songs[index].image})`; // Change the body background
@@ -72,9 +76,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Listen for synchronization events from the server
-    socket.on('play-song', (data) => {
-        currentSongIndex = data.songIndex; // Update the current song index
-        changeSong(currentSongIndex); // Change the song
+    socket.on('play-song', (data) =>  {
+        if (data && typeof data.songIndex !== 'undefined') {
+            if (data.songIndex >= 0 && data.songIndex < songs.length) {
+                currentSongIndex = data.songIndex; // Update the current song index
+                changeSong(currentSongIndex); // Change the song
+            } else {
+                console.error('Received invalid song index for play:', data.songIndex);
+            }
+        } else {
+            console.error('Received invalid data for play:', data);
+        }
     });
 
     socket.on('pause-song', () => {
@@ -82,7 +94,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('next-song', (data) => {
-        currentSongIndex = data.songIndex; // Update the current song index
-        changeSong(currentSongIndex); // Change the song
-    });
+        if (data.songIndex >= 0 && data.songIndex < songs.length) {
+            currentSongIndex = data.songIndex; // Update the current song index
+            changeSong(currentSongIndex); // Change the song
+        } else {
+            console.error('Received invalid song index for next:', data.songIndex);
+        }
+    })
 });

@@ -51,6 +51,13 @@ io.on('connection', (socket) => {
       io.in(roomId).emit('play-song', { song, timestamp });
     }
   });
+  socket.on('play-song', (data) => {
+    // Assuming you have logic to determine the current song index
+    if (rooms[data.roomId]) {
+        const currentSongIndex = rooms[data.roomId].currentSongIndex; // Example logic to get the index
+        io.to(data.roomId).emit('play-song', { songIndex: currentSongIndex });
+    }
+});
 
   socket.on('pause-song', ({ roomId }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner

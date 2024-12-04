@@ -64,8 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function changeSong(index) {
         if (index < 0 || index >= songs.length) {
             console.error('Invalid song index:', index);
-            return; // Exit the function if the index is invalid
+            return;
+        } 
+        if (!songs) {
+            console.error('Song is undefined');
+            return;
         }
+        const image = song.image; 
+        console.log('Received song data:', song);
+        changeSong(song);
         songImage.src = songs[index].image; // Update the song image
         audioSource.src = songs[index].url; // Update the audio source
         body.style.backgroundImage = `url(${songs[index].image})`; // Change the body background

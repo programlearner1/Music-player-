@@ -28,13 +28,15 @@ io.on('connection', (socket) => {
   socket.on('join-room', ({ roomId }) => {
     socket.join(roomId);
     console.log(`User  joined room: ${roomId}`);
+    console.log("joined")
 
     // If the room does not exist, initialize it with the default song
     if (!rooms[roomId]) {
       rooms[roomId] = {
         song: { ...defaultSong },
-        owner: socket.id, // Set the first user as the owner
-        users: [socket.id] // Keep track of users in the room
+        owner: socket.id,
+        users: [socket.id],
+        currentSongIndex: 0 // Initialize currentSongIndex
       };
     } else {
       rooms[roomId].users.push(socket.id); // Add user to the existing room
@@ -46,21 +48,32 @@ io.on('connection', (socket) => {
   });
 
   socket.on('play-song', ({ roomId, song, timestamp }) => {
-    if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner
-      rooms[roomId].song = { song, timestamp }; 
-      const currentSongIndex = rooms[roomId].currentSongIndex;// Update the song
+    if (rooms[roomId] && rooms[roomId].owner === socket.id) {
+      rooms[roomId].song = { song, timestamp };
+  
+      // Logic to determine the new index based on the song
+      const songIndex = songs.findIndex(s => s.url === song.url);
+      if (songIndex !== -1) {
+        rooms[roomId].currentSongIndex = songIndex; // Set the current song index
+      } else {
+        console.error('Song not found in the playlist.');
+      }
+  
+      const currentSongIndex = rooms[roomId].currentSongIndex; // Get the updated index
       io.in(roomId).emit('play-song', { songIndex: currentSongIndex });
     }
   });
   socket.on('play-song', (data) => {
-    const { roomId, songIndex } = data;//added
-    // Assuming you have logic to determine the current song index
-    if (rooms[data.roomId]) {
-        const currentSongIndex = rooms[data.roomId].currentSongIndex; // Example logic to get the index
-        io.to(data.roomId).emit('play-song', { songIndex: currentSongIndex });
+    const { roomId, songIndex } = data;
+    if (rooms[roomId]) {
+      const currentSongIndex = rooms[roomId].currentSongIndex;
+      if (songIndex !== null) {
+        io.to(roomId).emit('play-song', { songIndex });
+      } else {
+        console.error('Received null songIndex, cannot change song.');
+      }
     }
-    io.to(roomId).emit('play-song', { songIndex });//added
-});
+  });
 
   socket.on('pause-song', ({ roomId }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) { // Check if the sender is the owner

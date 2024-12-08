@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Optional: Link to your CSS -->
+    <link rel="stylesheet" href="styles1.css"> <!-- Optional: Link to your CSS -->
 </head>
 <body>
-    <h1>Room: <span id="room-id"></span></h1>
-    <h2>Owner: <span id="room-owner"></span></h2>
-    <h3>Number of Joiners: <span id="joiner-count">0</span></h3>
-    
+    <div class="header-container">
+        <h1>Channel: <span id="room-id"></span></h1>
+        <h2>Owner: <span id="room-owner"></span></h2>
+        <h3>Number of Joiners: <span id="joiner-count">0</span></h3>
+    </div>
     <h3>Playlist</h3>
     <ul id="playlist"></ul>
 
-    <audio id="audio-player" controls>
+    <!--<audio id="audio-player" controls>
         <source id="audio-source" src="" type="audio/mpeg">
         Your browser does not support the audio element.
-    </audio>
+    </audio>-->
 
     <script src="/socket.io/socket.io.js"></script>
     <script>

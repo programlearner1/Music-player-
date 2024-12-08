@@ -1,0 +1,71 @@
+/* styles.css */
+
+/* General body styles */
+body {
+    background-color: #121212; /* Dark background for the body */
+    color: #ffffff; /* White text */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Font style */
+    margin: 0;
+    padding: 20px;
+}
+
+/* Container for the header information */
+.header-container {
+    background-color: #1db954; /* Spotify green background for the upper box */
+    padding: 20px; /* Padding inside the box */
+    border-radius: 10px; /* Rounded corners */
+    margin-bottom: 20px; /* Space below the header box */
+}
+
+/* Header styles */
+h1, h2, h3 {
+    margin: 0;
+    padding: 10px 0;
+}
+
+/* Room title */
+h1 {
+    font-size: 2.5em;
+}
+
+/* Owner and joiner count styles */
+h2, h3 {
+    font-size: 1.5em;
+    color: #ffffff; /* White for better contrast on green background */
+}
+
+/* Container for the playlist */
+.playlist-container {
+    background-color: #282828; /* Dark background for the lower box */
+    padding: 20px; /* Padding inside the box */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Playlist styles */
+#playlist {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0;
+}
+
+#playlist li {
+    background-color: #383838; /* Darker background for playlist items */
+    margin: 10px 0; /* Space between items */
+    padding: 15px; /* Padding inside items */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+#playlist li:hover {
+    background-color: #1db954; /* Change background on hover */
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em; /* Smaller font size for mobile */
+    }
+    h2, h3 {
+        font-size: 1.2em; /* Smaller font size for mobile */
+    }
+}

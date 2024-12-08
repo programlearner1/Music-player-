@@ -28,7 +28,6 @@ io.on('connection', (socket) => {
   socket.on('join-room', ({ roomId }) => {
     socket.join(roomId);
     console.log(`User  joined room: ${roomId}`);
-    console.log("joined")
 
     // If the room does not exist, initialize it with the default song
     if (!rooms[roomId]) {
@@ -45,12 +44,13 @@ io.on('connection', (socket) => {
     // Sync new user with current room state
     socket.emit('play-song', rooms[roomId].song);
     socket.to(roomId).emit('user-joined', { message: 'A new user has joined the room.' });
+    io.to(roomId).emit('update-joiner-count', rooms[roomId].users.length); // Update joiner count
   });
 
   socket.on('play-song', ({ roomId, song, timestamp }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) {
       rooms[roomId].song = { song, timestamp };
-  
+
       // Logic to determine the new index based on the song
       const songIndex = songs.findIndex(s => s.url === song.url);
       if (songIndex !== -1) {
@@ -58,20 +58,9 @@ io.on('connection', (socket) => {
       } else {
         console.error('Song not found in the playlist.');
       }
-  
+
       const currentSongIndex = rooms[roomId].currentSongIndex; // Get the updated index
       io.in(roomId).emit('play-song', { songIndex: currentSongIndex });
-    }
-  });
-  socket.on('play-song', (data) => {
-    const { roomId, songIndex } = data;
-    if (rooms[roomId]) {
-      const currentSongIndex = rooms[roomId].currentSongIndex;
-      if (songIndex !== null) {
-        io.to(roomId).emit('play-song', { songIndex });
-      } else {
-        console.error('Received null songIndex, cannot change song.');
-      }
     }
   });
 
@@ -81,14 +70,14 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('next-song', ({ roomId }) =>{
+  socket.on('next-song', ({ roomId }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) {
-        // Update the current song index to the next song
-        rooms[roomId].currentSongIndex += 1; // Example logic to go to the next song
-        const currentSongIndex = rooms[roomId].currentSongIndex; // Get the updated index
-        io.in(roomId).emit('play-song', { songIndex: currentSongIndex }); // Emit the updated index
+      // Update the current song index to the next song
+      rooms[roomId].currentSongIndex += 1; // Example logic to go to the next song
+      const currentSongIndex = rooms[roomId].currentSongIndex; // Get the updated index
+      io.in(roomId).emit('play-song', { songIndex: currentSongIndex }); // Emit the updated index
     }
-});
+  });
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
@@ -97,6 +86,8 @@ io.on('connection', (socket) => {
       rooms[roomId].users = rooms[roomId].users.filter(userId => userId !== socket.id); // Remove user from the room
       if (rooms[roomId].users.length === 0) {
         delete rooms[roomId]; // Delete the room if empty
+      } else {
+        io.to(roomId).emit('update-joiner-count', rooms[roomId].users.length); // Update joiner count
       }
     }
   });
@@ -112,7 +103,7 @@ app.get('/socket.io/socket.io.js', (req, res) => {
 
 // 404 handler for unknown routes
 app.use((req, res) => {
-  res.status(404).send('Resource not found');
+  res.status(404).send(' Resource not found');
 });
 
 // Start the server

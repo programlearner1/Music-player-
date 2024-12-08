@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: "Rayani kadhale", artist:" M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },
         { title: "Manasilaayo", artist:"Anirudh Ravichander", url: "song5.mp3", image: "1.jpg" },
     ];
-    console.log('Songs array:', songs);
-
     let currentSongIndex = 0;
     changeSong(currentSongIndex);
 
@@ -32,7 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (roomId) {
             socket.emit('join-room', { roomId });
             currentRoom = roomId;
+            localStorage.setItem('roomId', roomId); // Store room ID in local storage
+            localStorage.setItem('roomOwner', 'Your Name'); // Replace with actual owner's name
+            localStorage.setItem('joinerCount', 1); // Initialize joiner count
             alert(`Joined room: ${roomId}`);
+            window.location.href = 'room.html'; // Redirect to room page
         }
     });
 

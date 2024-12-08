@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional: Link to your CSS -->
+</head>
+<body>
+    <h1>Room: <span id="room-id"></span></h1>
+    <h2>Owner: <span id="room-owner"></span></h2>
+    <h3>Number of Joiners: <span id="joiner-count">0</span></h3>
+    
+    <h3>Playlist</h3>
+    <ul id="playlist"></ul>
+
+    <audio id="audio-player" controls>
+        <source id="audio-source" src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io('http://localhost:3000'); // Connect to the server
+        const roomId = localStorage.getItem('roomId'); // Get room ID from local storage
+        const roomOwner = localStorage.getItem('roomOwner'); // Get room owner from local storage
+        const joinerCount = localStorage.getItem('joinerCount') || 0; // Get joiner count from local storage
+
+        document.getElementById('room-id').innerText = roomId;
+        document.getElementById('room-owner').innerText = roomOwner;
+        document.getElementById('joiner-count').innerText = joinerCount;
+
+        // Array of songs (this can be fetched from the server)
+        const songs = [
+            { title: "Bujji thalli", artist: "Javed Ali and Devi Sri Prasad", url: "music.mp3" },
+            { title: "Aa bandham abadhama", artist: "Vaishnavi Kovvuri", url: "song2.mp3" },
+            { title: "Hey rangule", artist: "Anurag Kulkarni", url: "song3.mp3" },
+            { title: "Rayani kadhale", artist: "M.S Krsna and Meha Agarwal", url: "song4.mp3" },
+            { title: "Manasilaayo", artist: "Anirudh Ravichander", url: "song5.mp3" },
+        ];
+
+        const playlistElement = document.getElementById('playlist');
+        songs.forEach((song, index) => {
+            const li = document.createElement('li');
+            li.innerText = `${song.title} - ${song.artist}`;
+            li.addEventListener('click', () => {
+                socket.emit('play-song', { songIndex: index });
+            });
+            playlistElement.appendChild(li);
+        });
+
+        // Listen for updates on joiner count
+        socket.on('update-joiner-count', (count) => {
+            document.getElementById('joiner-count').innerText = count;
+        });
+    </script>
+</body>
+</html>

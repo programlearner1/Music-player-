@@ -14,7 +14,16 @@ const io = new Server(server, {
 });
 
 let rooms = {}; // Store the current song and timestamp for each room
+const songs = [
+  { title: "Bujji thalli", artist:"Javed Ali and Devi Sri Prasad", url: "music.mp3", image: "img1.jpeg" },
+  { title: "Aa bandham abadhama", artist:"Vaishnavi Kovvuri", url: "song2.mp3", image: "thumbnail.jpg" },
+  { title: "Hey rangule", artist:" Anurag Kulkarni", url: "song3.mp3", image: "ranguleimg.jpg" },
+  { title: "Rayani kadhale", artist:" M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },
+  { title: "Manasilaayo", artist:"Anirudh Ravichander", url: "song5.mp3", image: "1.jpg" },
+];
 
+socket.emit('play-song', rooms[roomId].song);
+socket.emit('playlist', songs);
 // Example default song
 const defaultSong = {
   title: "Default Song Title",

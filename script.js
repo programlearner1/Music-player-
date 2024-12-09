@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     let currentSongIndex = 0;
     changeSong(currentSongIndex);
-
     // Join a room
     joinRoomBtn.addEventListener('click', () => {
         const roomId = roomIdInput.value;

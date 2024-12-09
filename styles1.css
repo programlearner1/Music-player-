@@ -1,4 +1,4 @@
-/* styles.css */
+/* styles1.css */
 
 /* General body styles */
 body {
@@ -58,6 +58,12 @@ h2, h3 {
 
 #playlist li:hover {
     background-color: #1db954; /* Change background on hover */
+}
+
+/* Audio player styles */
+audio {
+    width: 100%; /* Make audio player full width */
+    margin-top: 20px; /* Space above the audio player */
 }
 
 /* Responsive design */

@@ -3,56 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room</title>
-    <link rel="stylesheet" href="styles1.css"> <!-- Optional: Link to your CSS -->
+    <title>Music Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Circular Std', sans-serif;
+            background-color: #121212; /* Dark background */
+            color: white; /* White text */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #0f0f0f; /* Spotify green */
+        }
+        .room-info{
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 10px;
+            background-color:  #1DB954; /* Darker background for sections */
+            width: 100%;
+            max-width: 800px; /* Limit the width of the sections */
+        }
+        .playlist-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #282828; /* Darker background for sections */
+            width: 100%;
+            max-width: 800px;
+        }
+        .playlist-container {
+            display: flex; /* Use flexbox to align playlist and image */
+            align-items: flex-start;/* Center align items vertically */
+        }
+        #playlist {
+            list-style-type: none;
+            padding: 0;
+            flex: 1; /* Allow playlist to take available space */
+            position: relative; /* Position relative for animation */
+        }
+        #playlist li {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative; /* Position relative for the image animation */
+        }
+        #playlist li:hover {
+            background-color: #1DB954; /* Spotify green on hover */
+        }
+        #song-image {
+            width: 250px; /* Set a fixed width for the image */
+            height: 250px; /* Set a fixed height for the image */
+            border-radius: 10px;
+            position: absolute; /* Position absolute for animation */
+            right: -70px; /* Start off-screen */
+            opacity: 0; /* Start hidden */
+            transition: left 0.3s ease, opacity 0.3s ease; /* Transition for left and opacity */
+        }
+        .song-details {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div class="header-container">
-        <h1>Channel: <span id="room-id"></span></h1>
-        <h2>Owner: <span id="room-owner"></span></h2>
-        <h3>Number of Joiners: <span id="joiner-count">0</span></h3>
+    <div class="room-info">
+        <h1>Music Room</h1>
+        <p>Room ID: <span id="room-id"></span></p>
+        <p>Room Owner: <span id="room-owner">No owner yet</span></p>
+        <p>Joiner Count: <span id="joiner-count">0</span></p>
+        <p>Your Name: <span id="joiner-name"></span></p>
     </div>
-    <h3>Playlist</h3>
-    <ul id="playlist"></ul>
 
-    <!--<audio id="audio-player" controls>
-        <source id="audio-source" src="" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>-->
+    <div class="playlist-section">
+        <h2>Playlist</h2>
+        <div class="playlist-container">
+            <img id="song-image" src="" alt="Song Image">
+            <ul id="playlist"></ul>
+        </div>
+        <div class="song-details">
+            <h3 id="song-title"></h3>
+            <h4 id="song-artist"></h4>
+        </div>
+    </div>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <audio id="audio-player" src="" preload="auto"></audio> <!-- Audio element for playing songs -->
+
     <script>
-        const socket = io('http://localhost:3000'); // Connect to the server
-        const roomId = localStorage.getItem('roomId'); // Get room ID from local storage
-        const roomOwner = localStorage.getItem('roomOwner'); // Get room owner from local storage
-        const joinerCount = localStorage.getItem('joinerCount') || 0; // Get joiner count from local storage
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io('http://localhost:3000'); // Connect to the server
+            const songImage = document.getElementById('song-image');
+            const playlistElement = document.getElementById('playlist');
+            const audioPlayer = document.getElementById('audio-player'); // Audio player element
+            const roomId = localStorage.getItem('roomId '); // Get room ID from local storage
+            const roomOwner = localStorage.getItem('roomOwner'); // Get room owner from local storage
+            let joinerCount = parseInt(localStorage.getItem('joinerCount')) || 0; // Get joiner count from local storage
 
-        document.getElementById('room-id').innerText = roomId;
-        document.getElementById('room-owner').innerText = roomOwner;
-        document.getElementById('joiner-count').innerText = joinerCount;
+            // Update UI with room details
+            document.getElementById('room-id').innerText = roomId || "Not joined";
+            document.getElementById('room-owner').innerText = roomOwner || "No owner yet";
+            document.getElementById('joiner-count').innerText = joinerCount;
 
-        // Array of songs (this can be fetched from the server)
-        const songs = [
-            { title: "Bujji thalli", artist: "Javed Ali and Devi Sri Prasad", url: "music.mp3" },
-            { title: "Aa bandham abadhama", artist: "Vaishnavi Kovvuri", url: "song2.mp3" },
-            { title: "Hey rangule", artist: "Anurag Kulkarni", url: "song3.mp3" },
-            { title: "Rayani kadhale", artist: "M.S Krsna and Meha Agarwal", url: "song4.mp3" },
-            { title: "Manasilaayo", artist: "Anirudh Ravichander", url: "song5.mp3" },
-        ];
+            // Array of songs
+            const songs = [
+                { title: "Bujji thalli", artist: "Javed Ali and Devi Sri Prasad", url: "music.mp3", image: "img1.jpeg" },
+                { title: "Aa bandham abadhama", artist: "Vaishnavi Kovvuri", url: "song2.mp3", image: "thumbnail.jpg" },
+                { title: "Hey rangule", artist: "Anurag Kulkarni", url: "song3.mp3", image: "ranguleimg.jpg" },
+                { title: "Rayani kadhale", artist: "M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },
+                { title: "Manasilaayo", artist: "Anirudh Ravichander", url: "song5.mp3", image: "1.jpg" },
+            ];
+            let currentSongIndex = 0;
 
-        const playlistElement = document.getElementById('playlist');
-        songs.forEach((song, index) => {
-            const li = document.createElement('li');
-            li.innerText = `${song.title} - ${song.artist}`;
-            li.addEventListener('click', () => {
-                socket.emit('play-song', { songIndex: index });
+            // Populate the playlist
+            songs.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.innerText = `${song.title} - ${song.artist}`;
+                li.addEventListener('click', () => {
+                    currentSongIndex = index; // Update current song index
+                    changeSong(currentSongIndex); // Change the song display
+                });
+                playlistElement.appendChild(li);
             });
-            playlistElement.appendChild(li);
-        });
 
-        // Listen for updates on joiner count
-        socket.on('update-joiner-count', (count) => {
-            document.getElementById('joiner-count').innerText = count;
+            // Function to change the song display
+            function changeSong(index) {
+                if (index < 0 || index >= songs.length) {
+                    console.error('Invalid song index:', index);
+                    return; // Exit the function if the index is invalid
+                }
+
+                // Update the song image and details
+                songImage.src = songs[index].image; // Update the song image
+                document.getElementById('song-title').innerText = songs[index].title; // Update the song title
+                document.getElementById('song-artist').innerText = songs[index].artist || 'Unknown Artist'; // Update the artist name
+
+                // Set the audio source and play the song
+                audioPlayer.src = songs[index].url; // Set the audio source
+                audioPlayer.play(); // Play the song
+
+                // Show the image
+                songImage.style.right = '0'; // Move the image into view
+                songImage.style.opacity = '1'; // Fade in the image
+                document.querySelector('.song-details').style.opacity = '1'; // Fade in the song details
+                // Hide the image when the song ends
+                audioPlayer.onended = () => {
+                    songImage.style.right = '-70px'; // Move the image back off-screen
+                    songImage.style.opacity = '0'; // Fade out the image
+                    document.querySelector('.song-details').style.opacity = '0';
+                };
+            }
         });
     </script>
 </body>

@@ -74,6 +74,7 @@
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+    <div id="playlist"></div>
     <div class="room-info">
         <h1>Music Room</h1>
         <p>Room ID: <span id="room-id"></span></p>
@@ -98,7 +99,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const socket = io('http://localhost:3000'); // Connect to the server
+            const socket = io('https://imaginative-malabi-f9a327.netlify.app'); // Connect to the server
             const songImage = document.getElementById('song-image');
             const playlistElement = document.getElementById('playlist');
             const audioPlayer = document.getElementById('audio-player'); // Audio player element

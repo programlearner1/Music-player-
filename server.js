@@ -14,6 +14,15 @@ const io = new Server(server, {
 });
 
 let rooms = {}; // Store the current song and timestamp for each room
+
+// Example default song
+const defaultSong = {
+  title: "Default Song Title",
+  url: "https://example.com/default-song.mp3", // URL of the default song
+  timestamp: 0 // Start from the beginning
+};
+
+// Example playlist
 const songs = [
   { title: "Bujji thalli", artist:"Javed Ali and Devi Sri Prasad", url: "music.mp3", image: "img1.jpeg" },
   { title: "Aa bandham abadhama", artist:"Vaishnavi Kovvuri", url: "song2.mp3", image: "thumbnail.jpg" },
@@ -21,15 +30,6 @@ const songs = [
   { title: "Rayani kadhale", artist:" M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },
   { title: "Manasilaayo", artist:"Anirudh Ravichander", url: "song5.mp3", image: "1.jpg" },
 ];
-
-socket.emit('play-song', rooms[roomId].song);
-socket.emit('playlist', songs);
-// Example default song
-const defaultSong = {
-  title: "Default Song Title",
-  url: "https://example.com/default-song.mp3", // URL of the default song
-  timestamp: 0 // Start from the beginning
-};
 
 io.on('connection', (socket) => {
   console.log('A user connected');
@@ -52,6 +52,7 @@ io.on('connection', (socket) => {
 
     // Sync new user with current room state
     socket.emit('play-song', rooms[roomId].song);
+    socket.emit('playlist', songs); // Emit the playlist to the user
     socket.to(roomId).emit('user-joined', { message: 'A new user has joined the room.' });
     io.to(roomId).emit('update-joiner-count', rooms[roomId].users.length); // Update joiner count
   });
@@ -103,7 +104,7 @@ io.on('connection', (socket) => {
 });
 
 // Serve static files from the current directory
-app.use(express.static(__dirname));
+app.use(express.static(__dirname ));
 
 // Serve the Socket.IO client library
 app.get('/socket.io/socket.io.js', (req, res) => {
@@ -112,7 +113,7 @@ app.get('/socket.io/socket.io.js', (req, res) => {
 
 // 404 handler for unknown routes
 app.use((req, res) => {
-  res.status(404).send(' Resource not found');
+  res.status(404).send('Resource not found');
 });
 
 // Start the server

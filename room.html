@@ -99,7 +99,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const socket = io('https://imaginative-malabi-f9a327.netlify.app'); // Connect to the server
+            const socket = io('http://localhost:3000'); // Connect to the server
             const songImage = document.getElementById('song-image');
             const playlistElement = document.getElementById('playlist');
             const audioPlayer = document.getElementById('audio-player'); // Audio player element
@@ -133,13 +133,24 @@
                 playlistElement.appendChild(li);
             });
 
-            // Function to change the song display
-            function changeSong(index) {
-                if (index < 0 || index >= songs.length) {
-                    console.error('Invalid song index:', index);
-                    return; // Exit the function if the index is invalid
-                }
+            function displayPlaylist(songs) {
+            const playlistContainer = document.getElementById('playlist'); // Ensure you have an element with this ID
+            playlistContainer.innerHTML = ''; // Clear existing content
 
+            songs.forEach(song => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song'; // Add a class for styling
+                songElement.innerText = `${song.title} - ${song.url}`; // Customize how you want to display the song
+                songElement.onclick = () => playSong(song.url); // Add click event to play the song
+                playlistContainer.appendChild(songElement);
+            });
+            };
+
+        // Function to play the selected song
+        function playSong(url) {
+            const audioPlayer = new Audio(url); // Create a new audio element
+            audioPlayer.play(); // Play the song
+        };
                 // Update the song image and details
                 songImage.src = songs[index].image; // Update the song image
                 document.getElementById('song-title').innerText = songs[index].title; // Update the song title
@@ -160,7 +171,8 @@
                     document.querySelector('.song-details').style.opacity = '0';
                 };
             }
-        });
+        
+        );
     </script>
 </body>
 </html>

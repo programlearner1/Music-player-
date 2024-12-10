@@ -33,6 +33,7 @@ const songs = [
 
 io.on('connection', (socket) => {
   console.log('A user connected');
+  socket.emit('playlist', songs);
 
   socket.on('join-room', ({ roomId }) => {
     socket.join(roomId);

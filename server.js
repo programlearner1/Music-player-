@@ -57,6 +57,14 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('user-joined', { message: 'A new user has joined the room.' });
     io.to(roomId).emit('update-joiner-count', rooms[roomId].users.length); // Update joiner count
   });
+  socket.on('playlist', (songs) => {
+    const playlistElement = document.getElementById('playlist');
+    songs.forEach((song) => {
+        const li = document.createElement('li');
+        li.innerText = `${song.title} - ${song.artist}`;
+        playlistElement.appendChild(li);
+    });
+  });
 
   socket.on('play-song', ({ roomId, song, timestamp }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) {

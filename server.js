@@ -24,7 +24,7 @@ const defaultSong = {
 
 // Example playlist
 const songs = [
-  { title: "Bujji thalli", artist:"Javed Ali and Devi Sri Prasad", url: "music.mp3", image: "img1.jpeg" },
+  { title: "Bujji thalli", artist:"Javed Ali and Devi Sri Prasad", url: "\music\music.mp3", image: "img1.jpeg" },
   { title: "Aa bandham abadhama", artist:"Vaishnavi Kovvuri", url: "song2.mp3", image: "thumbnail.jpg" },
   { title: "Hey rangule", artist:" Anurag Kulkarni", url: "song3.mp3", image: "ranguleimg.jpg" },
   { title: "Rayani kadhale", artist:" M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },

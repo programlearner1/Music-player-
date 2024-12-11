@@ -62,7 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
         changeSong(currentSongIndex);
         audioPlayer.play(); 
     });
-
+    songs.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.innerText = `${song.title} - ${song.artist}`;
+        li.addEventListener('click', () => {
+            changeSong(index); // Change the song display
+        });
+        playlistElement.appendChild(li);
+    });
     // Function to change the song
     function changeSong(index) {
         console.log('Attempting to change song to index:', index);

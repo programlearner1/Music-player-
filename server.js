@@ -24,7 +24,7 @@ const defaultSong = {
 
 // Example playlist
 const songs = [
-  { title: "Bujji thalli", artist:"Javed Ali and Devi Sri Prasad", url: "\music\music.mp3", image: "img1.jpeg" },
+  { title: "Bujji thalli", artist:"Javed Ali and Devi Sri Prasad", url: "music\music.mp3", image: "img1.jpeg" },
   { title: "Aa bandham abadhama", artist:"Vaishnavi Kovvuri", url: "song2.mp3", image: "thumbnail.jpg" },
   { title: "Hey rangule", artist:" Anurag Kulkarni", url: "song3.mp3", image: "ranguleimg.jpg" },
   { title: "Rayani kadhale", artist:" M.S Krsna and Meha Agarwal", url: "song4.mp3", image: "download.jpeg" },
@@ -113,10 +113,10 @@ io.on('connection', (socket) => {
 });
 
 // Serve static files from the current directory
-app.use(express.static(__dirname ));
+//app.use(express.static(__dirname ));
 
 // Serve the Socket.IO client library
-app.get('/socket.io/socket.io.js', (req, res) => {
+/*app.get('/socket.io/socket.io.js', (req, res) => {
   res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
 });
 
@@ -134,4 +134,16 @@ server.listen(3000, () => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the favicon
-app.get('/favicon.ico', (req, res) => res.status(204));
+app.get('/favicon.ico', (req, res) => res.status(204));*/
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Example route to serve the index.html file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});

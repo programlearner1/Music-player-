@@ -25,11 +25,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 20px;
             font-weight: bold;
-            padding: 20px;
+            padding: 10px;
             border-radius: 10px;
             background-color:  #1DB954; /* Darker background for sections */
             width: 100%;
             max-width: 800px; /* Limit the width of the sections */
+            align-items: center; /* Center items vertically */
+            justify-content: space-between; 
         }
         .playlist-section {
             margin-bottom: 20px;
@@ -59,17 +61,44 @@
         #playlist li:hover {
             background-color: #1DB954; /* Spotify green on hover */
         }
-        #song-image {
-            width: 250px; /* Set a fixed width for the image */
-            height: 250px; /* Set a fixed height for the image */
-            border-radius: 10px;
-            position: absolute; /* Position absolute for animation */
-            right: -70px; /* Start off-screen */
-            opacity: 0; /* Start hidden */
-            transition: left 0.3s ease, opacity 0.3s ease; /* Transition for left and opacity */
-        }
+       
         .song-details {
             margin-top: 20px;
+            margin-left: 20px;
+        }
+        .song-controls {
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            align-items: end; /* Center items horizontally */
+            margin-left: 10px; /* Space between room details and image */
+            margin-top: -200px; /* Space above the controls */
+        }
+
+        #song-image {
+            width: 200px; /* Set a fixed width for the image */
+            height: 200px; /* Set a fixed height for the image */
+            border-radius: 10px; /* Rounded corners for the image */
+            margin-bottom: 10px; /* Space between image and title */
+            opacity: 0; /* Start hidden */
+            transition: opacity 0.3s ease; /* Smooth transition for opacity */
+        }
+        .controls {
+            display: flex; /* Use flexbox for button layout */
+            gap: 10px; /* Space between buttons */
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #252926; /* Spotify green */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            align-items:center;
+            margin-left: 30px;
+        }
+        button:hover {
+            background-color: #1ed760; /* Lighter green on hover */
         }
     </style>
     <script src="/socket.io/socket.io.js"></script>
@@ -82,12 +111,20 @@
         <p>Room Owner: <span id="room-owner">No owner yet</span></p>
         <p>Joiner Count: <span id="joiner-count">0</span></p>
         <p>Your Name: <span id="joiner-name"></span></p>
+    
+        <div class="song-controls">
+            <img id="song-image" src="" alt="Song Image">
+            <div class="controls">
+                <button id="play-button">Play</button>
+                <button id="pause-button">Pause</button>
+            </div>
+            <h3 id="song-title"></h3>
+        </div>
     </div>
 
     <div class="playlist-section">
         <h2>Playlist</h2>
         <div class="playlist-container">
-            <img id="song-image" src="" alt="Song Image">
             <ul id="playlist"></ul>
         </div>
         <div class="song-details">
@@ -107,7 +144,9 @@
             const roomId = localStorage.getItem('roomId '); // Get room ID from local storage
             const roomOwner = localStorage.getItem('roomOwner'); // Get room owner from local storage
             let joinerCount = parseInt(localStorage.getItem('joinerCount')) || 0; // Get joiner count from local storage
-
+            const playButton = document.getElementById('play-button');
+            const pauseButton = document.getElementById('pause-button');
+            
             // Update UI with room details
             document.getElementById('room-id').innerText = roomId || "Not joined";
             document.getElementById('room-owner').innerText = roomOwner || "No owner yet";
@@ -133,8 +172,6 @@
                 });
                 playlistElement.appendChild(li);
             });
-            
-
             // Function to change the song display
             function changeSong(index) {
                 if (index < 0 || index >= songs.length) {
@@ -150,11 +187,25 @@
                 // Set the audio source and play the song
                 audioPlayer.src = songs[index].url; // Set the audio source
                 audioPlayer.play(); // Play the song
+                audioPlayer.src = songs[index].url; // Set the audio source
 
-                // Show the image
-                songImage.style.right = '0'; // Move the image into view
+// Show the image
                 songImage.style.opacity = '1'; // Fade in the image
                 document.querySelector('.song-details').style.opacity = '1'; // Fade in the song details
+
+// Play the song when the play button is clicked
+                playButton.onclick = () => {
+                    audioPlayer.play();
+                };
+
+// Pause the song when the pause button is clicked
+                pauseButton.onclick = () => {
+                audioPlayer.pause();
+                };
+                // Show the image
+                //songImage.style.right = '0'; // Move the image into view
+                //songImage.style.opacity = '1'; // Fade in the image
+                //document.querySelector('.song-details').style.opacity = '1'; // Fade in the song details
                 // Hide the image when the song ends
                 audioPlayer.onended = () => {
                     songImage.style.right = '-70px'; // Move the image back off-screen

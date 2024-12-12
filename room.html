@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Room</title>
-    <script src="/socket.io/socket.io.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -101,7 +100,6 @@
             background-color: #1ed760; /* Lighter green on hover */
         }
     </style>
-    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     
@@ -134,7 +132,7 @@
     </div>
 
     <audio id="audio-player" src="" preload="auto"></audio> <!-- Audio element for playing songs -->
-
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const socket = io('http://localhost:3000'); // Connect to the server
@@ -146,6 +144,7 @@
             let joinerCount = parseInt(localStorage.getItem('joinerCount')) || 0; // Get joiner count from local storage
             const playButton = document.getElementById('play-button');
             const pauseButton = document.getElementById('pause-button');
+            
             
             // Update UI with room details
             document.getElementById('room-id').innerText = roomId || "Not joined";

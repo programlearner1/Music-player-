@@ -57,14 +57,14 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('user-joined', { message: 'A new user has joined the room.' });
     io.to(roomId).emit('update-joiner-count', rooms[roomId].users.length); // Update joiner count
   });
-  socket.on('playlist', (songs) => {
+  /*socket.on('playlist', (songs) => {
     const playlistElement = document.getElementById('playlist');
     songs.forEach((song) => {
         const li = document.createElement('li');
         li.innerText = `${song.title} - ${song.artist}`;
         playlistElement.appendChild(li);
     });
-  });
+  });*/
 
   socket.on('play-song', ({ roomId, song, timestamp }) => {
     if (rooms[roomId] && rooms[roomId].owner === socket.id) {
@@ -113,10 +113,10 @@ io.on('connection', (socket) => {
 });
 
 // Serve static files from the current directory
-//app.use(express.static(__dirname ));
+app.use(express.static(__dirname ));
 
 // Serve the Socket.IO client library
-/*app.get('/socket.io/socket.io.js', (req, res) => {
+app.get('/socket.io/socket.io.js', (req, res) => {
   res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
 });
 
@@ -134,16 +134,4 @@ server.listen(3000, () => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the favicon
-app.get('/favicon.ico', (req, res) => res.status(204));*/
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Example route to serve the index.html file
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Start the server
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.get('/favicon.ico', (req, res) => res.status(204));

@@ -117,4 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Received invalid song index for next:', data.songIndex);
         }
     })
+    // Client-side code
+socket.on('playlist', (songs) => {
+    const playlistElement = document.getElementById('playlist');
+    playlistElement.innerHTML = ''; // Clear the playlist
+  
+    songs.forEach((song) => {
+      const li = document.createElement('li');
+      li.innerText = `${song.title} - ${song.artist}`;
+      playlistElement.appendChild(li);
+    });
+  });
 });

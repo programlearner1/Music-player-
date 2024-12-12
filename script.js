@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const roomIdInput = document.getElementById('room-id');
     const songImage = document.getElementById('song-image');
     const body = document.body; // Reference to the body element
-    const playlistElement = document.getElementById('playlist');
 
     // Variable to hold the current room ID
     let currentRoom = null;
@@ -72,15 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistElement.appendChild(li);
     });
     // Function to change the song
-    function changeSong(index, songs) {
+    function changeSong(index) {
         console.log('Attempting to change song to index:', index);
         console.log('Current songs array:', songs);
-        
+    
         if (index < 0 || index >= songs.length) {
             console.error('Invalid song index:', index);
             return; // Exit the function if the index is invalid
         }
-        
+    
         // Now safely access the image and other properties
         songImage.src = songs[index].image; // Update the song image
         audioSource.src = songs[index].url; // Update the audio source
@@ -90,9 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('song-title').innerText = songs[index].title; // Update the song title
         document.getElementById('song-artist').innerText = songs[index].artist || 'Unknown Artist'; 
     }
-    li.addEventListener('click', () => {
-        changeSong(index, songs); // Change the song display
-    });
 
     // Listen for synchronization events from the server
     socket.on('play-song', (data) =>  {
@@ -100,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data && typeof data.songIndex !== 'undefined') {
             if (data.songIndex >= 0 && data.songIndex < songs.length) {
                 currentSongIndex = data.songIndex; // Update the current song index
-                changeSong(currentSongIndex, songs); // Change the song
+                changeSong(currentSongIndex); // Change the song
             } else {
                 console.error('Received invalid song index for play:', data.songIndex);
             }
@@ -116,22 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('next-song', (data) => {
         if (data.songIndex >= 0 && data.songIndex < songs.length) {
             currentSongIndex = data.songIndex; // Update the current song index
-            changeSong(currentSongIndex, songs); // Change the song
+            changeSong(currentSongIndex); // Change the song
         } else {
             console.error('Received invalid song index for next:', data.songIndex);
         }
     })
     // Client-side code
-    socket.on('playlist', (songs) => {
-        playlistElement.innerHTML = ''; // Clear the playlist
-      
-        songs.forEach((song, index) => {
-            const li = document.createElement('li');
-            li.innerText = `${song.title} - ${song.artist}`;
-            li.addEventListener('click', () => {
-              changeSong(index); // Change the song display
-            });
-            playlistElement.appendChild(li);
-          });
-    });
-    });
+socket.on('playlist', (songs) => {
+  const playlistElement = document.getElementById('playlist');
+  playlistElement.innerHTML = ''; // Clear the playlist
+
+  songs.forEach((song) => {
+    const li = document.createElement('li');
+    li.innerText = `${song.title} - ${song.artist}`;
+    playlistElement.appendChild(li);
+  });
+});
+});

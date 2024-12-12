@@ -122,10 +122,13 @@ socket.on('playlist', (songs) => {
     const playlistElement = document.getElementById('playlist');
     playlistElement.innerHTML = ''; // Clear the playlist
   
-    songs.forEach((song) => {
-      const li = document.createElement('li');
-      li.innerText = `${song.title} - ${song.artist}`;
-      playlistElement.appendChild(li);
+    songs.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.innerText = `${song.title} - ${song.artist}`;
+        li.addEventListener('click', () => {
+          changeSong(index); // Change the song display
+        });
+        playlistElement.appendChild(li);
+      });
     });
-  });
 });

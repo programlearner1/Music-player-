@@ -119,9 +119,10 @@
             <h3 id="song-title"></h3>
         </div>
     </div>
-
+    
     <div class="playlist-section">
         <h2>Playlist</h2>
+        <ul id="playlist"></ul>
         <div class="playlist-container">
             <ul id="playlist"></ul>
         </div>
@@ -152,6 +153,7 @@
             document.getElementById('joiner-count').innerText = joinerCount;
 
             // Array of songs
+            
             const songs = [
                 { title: "Bujji thalli", artist: "Javed Ali and Devi Sri Prasad", url: "music.mp3", image: "img1.jpeg" },
                 { title: "Aa bandham abadhama", artist: "Vaishnavi Kovvuri", url: "song2.mp3", image: "thumbnail.jpg" },

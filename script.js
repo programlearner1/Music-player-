@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const roomIdInput = document.getElementById('room-id');
     const songImage = document.getElementById('song-image');
     const body = document.body; // Reference to the body element
+    const playlistElement = document.getElementById('playlist');
 
     // Variable to hold the current room ID
     let currentRoom = null;
@@ -117,8 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Received invalid song index for next:', data.songIndex);
         }
     })
+    if (!playlistElement) {
+        console.error('Playlist element not found in the DOM');
+        return; // Exit if the element is not found
+    }
     // Client-side code
     socket.on('playlist', (songs) => {
+        console.log('Received playlist:', songs);
         const playlistElement = document.getElementById('playlist');
         playlistElement.innerHTML = ''; // Clear the playlist
 

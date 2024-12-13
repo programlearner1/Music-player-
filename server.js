@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
     // Sync new user with current room state
     socket.emit('play-song', rooms[roomId].song);
     socket.emit('playlist', songs); // Emit the playlist to the user
+    io.to(roomId).emit('playlist', songs);
     socket.to(roomId).emit('user-joined', { message: 'A new user has joined the room.' });
     io.to(roomId).emit('update-joiner-count', rooms[roomId].users.length); // Update joiner count
   });

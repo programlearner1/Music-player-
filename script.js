@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const socket = io('http://localhost:3000'); // Connect to the server
+    const socket = io('https://imaginative-malabi-f9a327.netlify.app'); // Connect to the server
     const audioPlayer = document.getElementById('audio-player');
     const audioSource = document.getElementById('audio-source');
     const playBtn = document.getElementById('play-btn');
@@ -134,4 +134,4 @@ document.addEventListener('DOMContentLoaded', () => {
             playlistElement.appendChild(li);
         });
     });
-});
+})
